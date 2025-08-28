@@ -1,0 +1,103 @@
+.app-container {
+  font-family: Arial, sans-serif;
+  padding: 10px;
+  background: #f5f6fa;
+}
+
+/* Grid */
+.grid-table {
+  display: grid;
+  grid-template-columns: 150px repeat(30, 180px); /* largura fixa para timestamps */
+  grid-auto-rows: 100px; /* altura fixa para célula */
+  border: 1px solid #ccc;
+  font-family: Arial, sans-serif;
+  overflow-x: auto;
+}
+
+/* Célula de evento */
+.grid-cell {
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+/* Cabeçalho */
+.header-cell {
+  background-color: #dcdde1;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Sistema */
+.system-cell {
+  font-weight: bold;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Event cell */
+.event-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 2px;
+  overflow: hidden;
+}
+
+/* Carousel */
+.carousel {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* scroll interno vertical */
+  max-height: 100%;
+  position: relative;
+}
+
+/* Track */
+.carousel-track {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Item do carousel */
+.carousel-item {
+  background-color: #ffc0cb; /* rosa claro */
+  margin-bottom: 2px;
+  padding: 4px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* Botões do carousel */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  background: rgba(255,255,255,0.4);
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 6px;
+  border-radius: 4px;
+}
+
+.carousel-btn:hover {
+  background: rgba(255,255,255,0.7);
+}
+
+.carousel-btn:first-of-type {
+  left: 2px;
+}
+
+.carousel-btn:last-of-type {
+  right: 2px;
+}

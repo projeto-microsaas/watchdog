@@ -1,27 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function Carousel({ items }) {
-  const [index, setIndex] = useState(0);
+function Carousel({ events, interval = 1000 }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [hovered, setHovered] = useState(false);
 
-  if (!items || items.length === 0) {
-    return <div className="carousel-empty">Nenhum item disponível</div>;
-  }
+  useEffect(() => {
+    if (!hovered || events.length <= 1) return;
 
-  const next = () => setIndex((prev) => (prev + 1) % items.length);
-  const prev = () => setIndex((prev) => (prev - 1 + items.length) % items.length);
+    const timeout = setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % events.length);
+    }, interval);
 
-  const item = items[index];
+    return () => clearTimeout(timeout);
+  }, [currentIndex, hovered, events, interval]);
+
+  const handleNext = () => setCurrentIndex((prev) => (prev + 1) % events.length);
+  const handlePrev = () => setCurrentIndex((prev) => (prev - 1 + events.length) % events.length);
+
+  const currentJob = events[currentIndex];
 
   return (
-    <div className="carousel">
-      <button onClick={prev}>◀</button>
-      <div className="carousel-item">
-        <p><strong>Data:</strong> {item.date}</p>
-        <p><strong>Job Type:</strong> {item.jobType}</p>
-        <p><strong>Order #:</strong> {item.orderNumber}</p>
-        <p><strong>Status:</strong> {item.status}</p>
+    <div
+      className="carousel"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <button className="carousel-btn" onClick={handlePrev}>‹</button>
+      <div className="carousel-track">
+        <div className="carousel-item">
+          {currentJob.jobType}-{currentJob.orderNumber}-{currentJob.status}
+        </div>
       </div>
-      <button onClick={next}>▶</button>
+      <button className="carousel-btn" onClick={handleNext}>›</button>
     </div>
   );
 }

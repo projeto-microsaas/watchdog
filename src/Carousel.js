@@ -1,39 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-function Carousel({ events, interval = 1000 }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [hovered, setHovered] = useState(false);
+export default function Carousel({ items }) {
+  const [index, setIndex] = useState(0);
+  if (!items || items.length === 0) return null;
 
-  useEffect(() => {
-    if (!hovered || events.length <= 1) return;
+  const handlePrev = () => setIndex((i) => Math.max(0, i - 1));
+  const handleNext = () => setIndex((i) => Math.min(items.length - 1, i + 1));
 
-    const timeout = setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % events.length);
-    }, interval);
-
-    return () => clearTimeout(timeout);
-  }, [currentIndex, hovered, events, interval]);
-
-  const handleNext = () => setCurrentIndex((prev) => (prev + 1) % events.length);
-  const handlePrev = () => setCurrentIndex((prev) => (prev - 1 + events.length) % events.length);
-
-  const currentJob = events[currentIndex];
+  const current = items[index];
 
   return (
-    <div
-      className="carousel"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <button className="carousel-btn" onClick={handlePrev}>‹</button>
+    <div className="carousel">
+      <button className="carousel-btn" onClick={handlePrev} disabled={index === 0}>
+        ‹
+      </button>
       <div className="carousel-track">
         <div className="carousel-item">
-          {currentJob.jobType}-{currentJob.orderNumber}-{currentJob.status}
+          <div>Order: {current.orderNumber}</div>
+          <div>Type: {current.jobType}</div>
+          <div>Status: {current.status}</div>
         </div>
       </div>
-      <button className="carousel-btn" onClick={handleNext}>›</button>
+      <button className="carousel-btn" onClick={handleNext} disabled={index === items.length - 1}>
+        ›
+      </button>
     </div>
   );
 }
-
-export default Carousel;

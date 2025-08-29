@@ -1,52 +1,40 @@
 import React from "react";
 import Carousel from "./Carousel";
 
-const systemColors = {
-  COURMAN: "#273c75",
-  COS: "#44bd32",
-  CMAS: "#e1b12c"
-};
-
-function Grid({ timeline, systems, eventsData }) {
+export default function Grid({ timeline, systems, eventsData }) {
   return (
-    <div className="grid-table">
+    <div
+      className="grid-table"
+      style={{
+        gridTemplateColumns: `150px repeat(${timeline.length}, 180px)`
+      }}
+    >
       {/* Cabeçalho */}
-      <div className="grid-cell header-cell">Sistema / Horário</div>
-      {timeline.map(time => (
-        <div key={time} className="grid-cell header-cell">{time}</div>
+      <div className="header-cell">System / Time</div>
+      {timeline.map((time) => (
+        <div key={time} className="header-cell">{time}</div>
       ))}
 
-      {/* Linhas de sistemas */}
-      {systems.map(system => (
-        <>
-          {/* Nome do sistema */}
-          <div
-            key={system + "-name"}
-            className="grid-cell system-cell"
-            style={{backgroundColor: systemColors[system]}}
-          >
-            {system}
-          </div>
-
-          {/* Células de eventos */}
-          {timeline.map(time => {
-            const events = eventsData[system][time] || [];
-            const jobs = events.flatMap(e => e.jobOffers || []);
-
-            if (jobs.length === 0) {
-              return <div key={system+time} className="grid-cell event-cell"></div>;
-            }
-
+      {/* Linhas por sistema */}
+      {systems.map((system) => (
+        <React.Fragment key={system}>
+          <div className="system-cell">{system}</div>
+          {timeline.map((time) => {
+            const cellEvents = eventsData[system][time] || [];
+            // Junta todos os jobOffers da célula em um único array
+            const jobs = cellEvents.flatMap(e => e.jobOffers || []);
             return (
-              <div key={system+time} className="grid-cell event-cell">
-                <Carousel events={jobs} interval={800} />
+              <div key={time + system} className="event-cell">
+                {jobs.length > 0 ? (
+                  <Carousel items={jobs} />
+                ) : (
+                  <div style={{ fontSize: "10px", color: "#999" }}>No Jobs</div>
+                )}
               </div>
             );
           })}
-        </>
+        </React.Fragment>
       ))}
     </div>
   );
 }
-
-export default Grid;

@@ -1,103 +1,188 @@
+/* Wrapper com fundo aurora animado */
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  background: #1e1e1e;
+}
+
+/* Aurora animada */
+.app-wrapper::before,
+.app-wrapper::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 0;
+  background-size: 200% 200%;
+  mix-blend-mode: screen;
+}
+
+.app-wrapper::before {
+  background: linear-gradient(135deg, rgba(0,255,255,0.15), rgba(255,0,255,0.15), rgba(0,255,0,0.15));
+  animation: auroraMove1 40s ease-in-out infinite;
+}
+
+.app-wrapper::after {
+  background: linear-gradient(45deg, rgba(255,255,0,0.1), rgba(0,128,255,0.1), rgba(255,0,128,0.1));
+  animation: auroraMove2 60s ease-in-out infinite;
+}
+
+@keyframes auroraMove1 { 
+  0% { background-position: 0% 0%; } 
+  50% { background-position: 100% 100%; } 
+  100% { background-position: 0% 0%; } 
+}
+@keyframes auroraMove2 { 
+  0% { background-position: 100% 0%; } 
+  50% { background-position: 0% 100%; } 
+  100% { background-position: 100% 0%; } 
+}
+
+/* Container da planilha com scroll e borda futurista */
 .app-container {
-  font-family: Arial, sans-serif;
-  padding: 10px;
-  background: #f5f6fa;
+  background: transparent;
+  padding: 20px;
+  border-radius: 16px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 40px auto 60px auto;
+  position: relative;
+  z-index: 1;
+  overflow: auto;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 20px rgba(0,255,255,0.2), 0 0 40px rgba(255,0,255,0.1);
+}
+
+/* Scrollbar elegante */
+.app-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.app-container::-webkit-scrollbar-track {
+  background: rgba(30,30,40,0.1);
+  border-radius: 4px;
+}
+.app-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #44bd32, #8be04e);
+  border-radius: 4px;
+  border: 1px solid rgba(30,30,40,0.2);
 }
 
 /* Grid */
 .grid-table {
   display: grid;
-  grid-template-columns: 150px repeat(30, 180px); /* largura fixa para timestamps */
-  grid-auto-rows: 100px; /* altura fixa para célula */
-  border: 1px solid #ccc;
-  font-family: Arial, sans-serif;
-  overflow-x: auto;
+  grid-template-columns: 150px repeat(auto-fit, minmax(180px, 1fr)); /* Ajuste automático para evitar sobreposição */
+  grid-auto-rows: 120px;
+  border-collapse: collapse;
+  z-index: 2;
+  position: relative;
 }
 
-/* Célula de evento */
-.grid-cell {
-  border: 1px solid #ccc;
+/* Garante que cada célula não extrapole o grid */
+.grid-table > div {
+  min-width: 0;
+}
+
+/* Células com fundo transparente e bordas brilhantes */
+.header-cell, .system-cell, .event-cell {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.3);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 2px;
+  align-items: center;
+  padding: 4px;
   box-sizing: border-box;
 }
 
 /* Cabeçalho */
 .header-cell {
-  background-color: #dcdde1;
   font-weight: bold;
-  text-align: center;
+  color: #fff;
 }
 
 /* Sistema */
 .system-cell {
   font-weight: bold;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  color: #00fff0;
 }
 
-/* Event cell */
+/* Eventos */
 .event-cell {
-  display: flex;
   flex-direction: column;
-  align-items: stretch;
   justify-content: flex-start;
-  padding: 2px;
+  align-items: stretch;
   overflow: hidden;
+  box-shadow: 0 0 5px rgba(0,255,255,0.2);
 }
 
 /* Carousel */
 .carousel {
   display: flex;
-  flex-direction: column;
-  overflow-y: auto; /* scroll interno vertical */
-  max-height: 100%;
+  align-items: center;
+  justify-content: space-between;
   position: relative;
+  margin-bottom: 4px;
 }
 
-/* Track */
 .carousel-track {
+  flex-grow: 1;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Item do carousel */
 .carousel-item {
-  background-color: #ffc0cb; /* rosa claro */
-  margin-bottom: 2px;
-  padding: 4px;
+  background: rgba(68,189,50,0.5);
+  color: #fff;
+  padding: 2px 4px;
   border-radius: 4px;
-  text-align: center;
   font-size: 12px;
-  flex-shrink: 0;
+  text-align: center;
+  min-width: 80px;
 }
 
-/* Botões do carousel */
 .carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1;
-  background: rgba(255,255,255,0.4);
+  background: rgba(85,85,255,0.4);
+  color: #fff;
   border: none;
-  font-size: 18px;
+  padding: 2px 6px;
   cursor: pointer;
-  padding: 0 6px;
   border-radius: 4px;
 }
 
-.carousel-btn:hover {
-  background: rgba(255,255,255,0.7);
+.carousel-btn:disabled { 
+  background: rgba(0,0,0,0.2); 
+  cursor: default; 
 }
 
-.carousel-btn:first-of-type {
-  left: 2px;
+/* Paginação */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+  gap: 12px;
 }
 
-.carousel-btn:last-of-type {
-  right: 2px;
+.pagination-controls button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #44bd32;
+  color: white;
+  font-weight: bold;
+}
+
+.pagination-controls button:disabled {
+  background: #888;
+  cursor: default;
 }

@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "./Grid";
 import "./Grid.css";
 
-// 30 timestamps quebrados
+// Timeline e sistemas
 const timeline = [
   "2025-07-26 05:12:35.708", "2025-07-26 05:25:12.123", "2025-07-26 05:40:48.567",
   "2025-07-26 06:05:10.234", "2025-07-26 06:20:30.001", "2025-07-26 06:35:50.456",
@@ -18,28 +18,22 @@ const timeline = [
 
 const systems = ["COURMAN", "COS", "CMAS"];
 
-// Função para gerar jobs fake
 const generateJobs = (count, startOrder = 637812100) => {
   const jobs = [];
   for (let i = 0; i < count; i++) {
     const type = i % 2 === 0 ? "COLLECT" : "DELIVER";
-    jobs.push({
-      orderNumber: startOrder + i,
-      jobType: type,
-      status: "ASSIGNED"
-    });
+    jobs.push({ orderNumber: startOrder + i, jobType: type, status: "ASSIGNED" });
   }
   return jobs;
 };
 
-// Mocks realistas
+// Eventos por sistema/timestamp
 const eventsData = {};
 systems.forEach(system => {
   eventsData[system] = {};
   timeline.forEach((time, index) => {
-    const numEvents = Math.floor(Math.random() * 3); // 0 a 2 eventos por célula
+    const numEvents = Math.floor(Math.random() * 3);
     const cellEvents = [];
-
     for (let i = 0; i < numEvents; i++) {
       cellEvents.push({
         ongoingJob: [],
@@ -47,18 +41,30 @@ systems.forEach(system => {
         queuedJob: []
       });
     }
-
     eventsData[system][time] = cellEvents;
   });
 });
 
-function App() {
+export default function App() {
+  const PAGE_SIZE = 7;
+  const [page, setPage] = useState(0);
+  const totalPages = Math.ceil(timeline.length / PAGE_SIZE);
+  const pageTimeline = timeline.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
+  const handlePrevPage = () => setPage(p => Math.max(0, p - 1));
+  const handleNextPage = () => setPage(p => Math.min(totalPages - 1, p + 1));
+
   return (
-    <div className="app-container">
-      <h2>Disparity Report Summary - 30 Timestamps</h2>
-      <Grid timeline={timeline} systems={systems} eventsData={eventsData} />
+    <div className="app-wrapper">
+      <div className="app-container">
+        <h2 style={{ color: "#fff", textAlign: "center" }}>Disparity Report Summary</h2>
+        <Grid timeline={pageTimeline} systems={systems} eventsData={eventsData} />
+        <div className="pagination-controls">
+          <button onClick={handlePrevPage} disabled={page === 0}>‹ Prev</button>
+          <span style={{color:"#fff"}}>Page {page + 1} / {totalPages}</span>
+          <button onClick={handleNextPage} disabled={page === totalPages - 1}>Next ›</button>
+        </div>
+      </div>
     </div>
   );
 }
-
-export default App;
